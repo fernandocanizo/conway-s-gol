@@ -5,6 +5,29 @@
 
 const CELL_SIZE = 20;
 
+var Circle = {
+	x: null,
+	y: null,
+	radius: null,
+	color: null,
+	borderColor: null,
+	borderSize: null,
+
+	draw: function (ctx) {
+		ctx.beginPath();
+		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+		ctx.fillStyle = this.color || "#000";
+		ctx.fill();
+		ctx.lineWidth = this.borderSize || 1;
+		ctx.strokeStyle = this.borderColor || "#000";
+		ctx.stroke();
+	}
+};
+
+
+///////////////////////////////////////////////////////////////////////////////
+// main
+///////////////////////////////////////////////////////////////////////////////
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
@@ -37,16 +60,11 @@ for(var y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
 
 for(x = 0; x <= ctx.canvas.width; x += CELL_SIZE) {
 	for(y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
-		var centerX = x + CELL_SIZE / 2;
-		var centerY = y + CELL_SIZE / 2;
-		var radius = CELL_SIZE / 3;
-
-		ctx.beginPath();
-		ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-		ctx.fillStyle = 'green';
-		ctx.fill();
-		ctx.lineWidth = 1;
-		ctx.strokeStyle = '#000';
-		ctx.stroke();
+		var c = Object.create(Circle);
+		c.x = x + CELL_SIZE / 2;
+		c.y = y + CELL_SIZE / 2;
+		c.radius = CELL_SIZE / 3;
+		c.color = "#ff0000";
+		c.draw(ctx);
 	}
 }
