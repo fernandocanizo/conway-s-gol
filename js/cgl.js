@@ -35,6 +35,7 @@ var Grid = {
 	backgroundColor: null,
 	lineWidth: null,
 	lineColor: null,
+	cells: null,
 
 	drawBackground: function (ctx) {
 		ctx.fillStyle = this.backgroundColor || "#ccc";
@@ -51,16 +52,42 @@ var Grid = {
 			ctx.lineTo(x, ctx.canvas.height);
 			ctx.stroke();
 			ctx.closePath();
+
+			// by doing the loops this way I can collect centers to fill the cell property
+			// init cells if empty
+			if(null === this.cells) {
+				this.cells = [[]];
+			} else {
+				// add a new empty row
+				this.cells.push([]);
+			}
+
+			if(0 === this.cells.length) {
+				// add the first row
+				this.cells.push([]);
+			}
+
+			for(var y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
+				// Note: if we would have used a square canvas, then both set of lines could be done in one single loop
+				ctx.beginPath();
+				ctx.moveTo(0, y);
+				ctx.lineTo(ctx.canvas.width, y);
+				ctx.stroke();
+				ctx.closePath();
+
+				// collect cells centers
+				// x and y are related to the canvas here
+				// then divide by CELL_SIZE to make it a consecutive array index
+
+				var xArrayIndex = x / CELL_SIZE;
+				var yArrayIndex = y / CELL_SIZE;
+				this.cells[xArrayIndex].push(Object.create(Point));
+				this.cells[xArrayIndex][yArrayIndex].x = x + CELL_SIZE / 2;
+				this.cells[xArrayIndex][yArrayIndex].y = y + CELL_SIZE / 2;
+			}
 		}
 
-		for(var y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
-			// Note: if we would have used a square canvas, then both set of lines could be done in one single loop
-			ctx.beginPath();
-			ctx.moveTo(0, y);
-			ctx.lineTo(ctx.canvas.width, y);
-			ctx.stroke();
-			ctx.closePath();
-		}
+
 	},
 
 	draw: function (ctx) {
@@ -80,15 +107,3 @@ ctx.canvas.height = window.innerHeight - (window.innerHeight % CELL_SIZE);
 
 var grid = Object.create(Grid);
 grid.draw(ctx);
-
-
-for(x = 0; x <= ctx.canvas.width; x += CELL_SIZE) {
-	for(y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
-		var c = Object.create(Circle);
-		c.center.x = x + CELL_SIZE / 2;
-		c.center.y = y + CELL_SIZE / 2;
-		c.radius = CELL_SIZE / 3;
-		c.color = "#ff0000";
-		c.draw(ctx);
-	}
-}
