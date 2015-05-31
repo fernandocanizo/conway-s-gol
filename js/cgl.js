@@ -28,8 +28,7 @@ var Circle = {
 ///////////////////////////////////////////////////////////////////////////////
 // main
 ///////////////////////////////////////////////////////////////////////////////
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
+var ctx = document.getElementById('canvas').getContext('2d');
 
 ctx.canvas.width  = window.innerWidth - (window.innerWidth % CELL_SIZE);
 ctx.canvas.height = window.innerHeight - (window.innerHeight % CELL_SIZE);
