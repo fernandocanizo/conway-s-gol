@@ -5,9 +5,15 @@
 
 const CELL_SIZE = 20;
 
+// don't need to draw points on this app, so let's do a pure hash
+var Point = Object.create(null, {
+	x: { writable: true, value: null },
+	y: { writable: true, value: null }
+});
+
+
 var Circle = {
-	x: null,
-	y: null,
+	center: Object.create(Point),
 	radius: null,
 	color: null,
 	borderColor: null,
@@ -15,7 +21,7 @@ var Circle = {
 
 	draw: function (ctx) {
 		ctx.beginPath();
-		ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
+		ctx.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI, false);
 		ctx.fillStyle = this.color || "#000";
 		ctx.fill();
 		ctx.lineWidth = this.borderSize || 1;
@@ -60,8 +66,8 @@ for(var y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
 for(x = 0; x <= ctx.canvas.width; x += CELL_SIZE) {
 	for(y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
 		var c = Object.create(Circle);
-		c.x = x + CELL_SIZE / 2;
-		c.y = y + CELL_SIZE / 2;
+		c.center.x = x + CELL_SIZE / 2;
+		c.center.y = y + CELL_SIZE / 2;
 		c.radius = CELL_SIZE / 3;
 		c.color = "#ff0000";
 		c.draw(ctx);
