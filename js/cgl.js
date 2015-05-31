@@ -31,37 +31,56 @@ var Circle = {
 };
 
 
-///////////////////////////////////////////////////////////////////////////////
+var Grid = {
+	backgroundColor: null,
+	lineWidth: null,
+	lineColor: null,
+
+	drawBackground: function (ctx) {
+		ctx.fillStyle = this.backgroundColor || "#ccc";
+		ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	},
+
+	drawGrid: function (ctx) {
+		ctx.lineWidth = this.lineWidth || 0.5;
+		ctx.strokeStyle = this.lineColor || "#000";
+
+		for(var x = 0; x <= ctx.canvas.width; x += CELL_SIZE) {
+			ctx.beginPath();
+			ctx.moveTo(x, 0);
+			ctx.lineTo(x, ctx.canvas.height);
+			ctx.stroke();
+			ctx.closePath();
+		}
+
+		for(var y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
+			// Note: if we would have used a square canvas, then both set of lines could be done in one single loop
+			ctx.beginPath();
+			ctx.moveTo(0, y);
+			ctx.lineTo(ctx.canvas.width, y);
+			ctx.stroke();
+			ctx.closePath();
+		}
+	},
+
+	draw: function (ctx) {
+		this.drawBackground(ctx);
+		this.drawGrid(ctx);
+	}
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 // main
-///////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 var ctx = document.getElementById('canvas').getContext('2d');
 
 ctx.canvas.width  = window.innerWidth - (window.innerWidth % CELL_SIZE);
 ctx.canvas.height = window.innerHeight - (window.innerHeight % CELL_SIZE);
 
-// background
-ctx.fillStyle = "rgb(150, 150, 150)";
-ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+var grid = Object.create(Grid);
+grid.draw(ctx);
 
-ctx.lineWidth = 1.5;
-ctx.strokeStyle = "#000";
-
-for(var x = 0; x <= ctx.canvas.width; x += CELL_SIZE) {
-	ctx.beginPath();
-	ctx.moveTo(x, 0);
-	ctx.lineTo(x, ctx.canvas.height);
-	ctx.stroke();
-	ctx.closePath();
-}
-
-for(var y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
-	// Note: if we would have used a square canvas, then both set of lines could be done in one single loop
-	ctx.beginPath();
-	ctx.moveTo(0, y);
-	ctx.lineTo(ctx.canvas.width, y);
-	ctx.stroke();
-	ctx.closePath();
-}
 
 for(x = 0; x <= ctx.canvas.width; x += CELL_SIZE) {
 	for(y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
