@@ -78,21 +78,59 @@ var Grid = {
 				// collect cells centers
 				// x and y are related to the canvas here
 				// then divide by CELL_SIZE to make it a consecutive array index
-
 				var xArrayIndex = x / CELL_SIZE;
 				var yArrayIndex = y / CELL_SIZE;
 				this.cells[xArrayIndex].push(Object.create(Point));
 				this.cells[xArrayIndex][yArrayIndex].x = x + CELL_SIZE / 2;
 				this.cells[xArrayIndex][yArrayIndex].y = y + CELL_SIZE / 2;
+
+				// alse set their alive status
+				if(Math.random() > 0.5) {
+					this.cells[xArrayIndex][yArrayIndex].isAlive = true;
+				} else {
+					this.cells[xArrayIndex][yArrayIndex].isAlive = false;
+				}
 			}
 		}
+	},
 
-
+	drawCells: function (ctx) {
+		this.cells.forEach(function (x) {
+			x.forEach(function (y) {
+				if(y.isAlive) {
+					y.cell = Object.create(Circle);
+					y.cell.center.x = y.x;
+					y.cell.center.y = y.y;
+					y.cell.radius = CELL_SIZE / 3;
+					y.cell.color = "#ff0000";
+					y.cell.draw(ctx);
+				}
+			});
+		});
 	},
 
 	draw: function (ctx) {
 		this.drawBackground(ctx);
 		this.drawGrid(ctx);
+		this.drawCells(ctx);
+	},
+
+	resetCells: function () {
+		// re-initializes board. It needs to be already drawn
+		if(null === this.cells) {
+			throw Error("Cannot initialize cells if the grid hasn't been drawn.");
+		}
+
+		this.cells.forEach(function (x) {
+			x.forEach(function (y) {
+				if(Math.random() > 0.5) {
+					y.isAlive = true;
+				} else {
+					y.isAlive = false;
+				}
+			});
+		});
+
 	}
 };
 
