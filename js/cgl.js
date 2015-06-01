@@ -46,6 +46,12 @@ var Grid = {
 		ctx.lineWidth = this.lineWidth || 0.5;
 		ctx.strokeStyle = this.lineColor || "#000";
 
+		var isInitializing = false;
+		if(null === Grid.cells) {
+			isInitializing = true;
+			Grid.cells = [];
+		}
+
 		for(var x = 0; x <= ctx.canvas.width; x += CELL_SIZE) {
 			ctx.beginPath();
 			ctx.moveTo(x, 0);
@@ -53,45 +59,41 @@ var Grid = {
 			ctx.stroke();
 			ctx.closePath();
 
-			// by doing the loops this way I can collect centers to fill the cell property
-			// init cells if empty
-			if(null === this.cells) {
-				this.cells = [[]];
-			} else {
+			if(isInitializing) {
 				// add a new empty row
-				this.cells.push([]);
-			}
-
-			if(0 === this.cells.length) {
-				// add the first row
-				this.cells.push([]);
+				Grid.cells.push([]);
 			}
 
 			for(var y = 0; y <= ctx.canvas.height; y += CELL_SIZE) {
-				// Note: if we would have used a square canvas, then both set of lines could be done in one single loop
+				// Note: if we would have used a square canvas,
+				// then both set of lines could be done in one single loop
 				ctx.beginPath();
 				ctx.moveTo(0, y);
 				ctx.lineTo(ctx.canvas.width, y);
 				ctx.stroke();
 				ctx.closePath();
 
-				// collect cells centers
-				// x and y are related to the canvas here
-				// then divide by CELL_SIZE to make it a consecutive array index
-				var xArrayIndex = x / CELL_SIZE;
-				var yArrayIndex = y / CELL_SIZE;
-				this.cells[xArrayIndex].push(Object.create(Point));
-				this.cells[xArrayIndex][yArrayIndex].x = x + CELL_SIZE / 2;
-				this.cells[xArrayIndex][yArrayIndex].y = y + CELL_SIZE / 2;
+				if(isInitializing) {
+					// collect cells centers
+					// x and y are related to the canvas here
+					// then divide by CELL_SIZE to make it a consecutive array index
+					var xArrayIndex = x / CELL_SIZE;
+					var yArrayIndex = y / CELL_SIZE;
+					this.cells[xArrayIndex].push(Object.create(Point));
+					this.cells[xArrayIndex][yArrayIndex].x = x + CELL_SIZE / 2;
+					this.cells[xArrayIndex][yArrayIndex].y = y + CELL_SIZE / 2;
 
-				// alse set their alive status
-				if(Math.random() > 0.5) {
-					this.cells[xArrayIndex][yArrayIndex].isAlive = true;
-				} else {
-					this.cells[xArrayIndex][yArrayIndex].isAlive = false;
+					// also set their alive status
+					if(Math.random() > 0.5) {
+						this.cells[xArrayIndex][yArrayIndex].isAlive = true;
+					} else {
+						this.cells[xArrayIndex][yArrayIndex].isAlive = false;
+					}
 				}
 			}
 		}
+
+		isInitializing = false;
 	},
 
 	drawCells: function (ctx) {
