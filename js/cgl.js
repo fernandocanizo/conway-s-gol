@@ -130,7 +130,67 @@ var Grid = {
 				}
 			});
 		});
+	},
 
+	getNeighbors: function (xInArray, yInArray, xArrayLength, yArrayLength) {
+		var neighbors = [];
+		var xMinusOne = xInArray - 1;
+		var yMinusOne = yInArray - 1;
+		var xPlusOne = xInArray + 1;
+		var yPlusOne = yInArray + 1;
+		var lastX = xArrayLength - 1;
+		var lastY = yArrayLength - 1;
+		var aux;
+
+		// NW
+		aux = Object.create(Point);
+		aux.x = (-1 === (xMinusOne))? lastX : xMinusOne;
+		aux.y = (-1 === (yMinusOne))? lastY : yMinusOne;
+		neighbors.push(aux);
+
+		// N
+		aux = Object.create(Point);
+		aux.x = xInArray;
+		aux.y = (-1 === (yMinusOne))? lastY : yMinusOne;
+		neighbors.push(aux);
+
+		// NE
+		aux = Object.create(Point);
+		aux.x = ((xPlusOne) > (lastX))? 0 : xPlusOne;
+		aux.y = (-1 === (yMinusOne))? lastY : yMinusOne;
+		neighbors.push(aux);
+
+		// W
+		aux = Object.create(Point);
+		aux.x = (-1 === (xMinusOne))? lastX : xMinusOne;
+		aux.y = yInArray;
+		neighbors.push(aux);
+
+		// E
+		aux = Object.create(Point);
+		aux.x = ((xPlusOne) > (lastX))? 0 : xPlusOne;
+		aux.y = yInArray;
+		neighbors.push(aux);
+
+		// SW
+		aux = Object.create(Point);
+		aux.x = (-1 === (xMinusOne))? lastX : xMinusOne;
+		aux.y = ((yPlusOne) > (lastY))? 0 : yPlusOne;
+		neighbors.push(aux);
+
+		// S
+		aux = Object.create(Point);
+		aux.x = xInArray;
+		aux.y = ((yPlusOne) > (lastY))? 0 : yPlusOne;
+		neighbors.push(aux);
+
+		// SE
+		aux = Object.create(Point);
+		aux.x = ((xPlusOne) > (lastX))? 0 : xPlusOne;
+		aux.y = ((yPlusOne) > (lastY))? 0 : yPlusOne;
+		neighbors.push(aux);
+
+		return neighbors;
 	}
 };
 
