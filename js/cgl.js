@@ -193,6 +193,36 @@ var Grid = {
 		neighbors.push(aux);
 
 		return neighbors;
+	},
+
+	getNextGeneration: function () {
+		// given current this.cells statuses, build next generation based on Conway's game rules
+
+		// copy current status
+		var nextCells = [];
+		Grid.cells.forEach(function (row) {
+			nextCells.push(row.slice());
+		});
+
+		Grid.cells.forEach(function (row, x) {
+			row.forEach(function (cell, y) {
+				var neighbors = Grid.getNeighbors(x, y, Grid.cells.length, row.length);
+				var aliveNeighbors = 0;
+
+				neighbors.forEach(function(logicPoint) {
+					if(Grid.cells[logicPoint.x][logicPoint.y].isAlive) aliveNeighbors++;
+				});
+
+				// now set up next generation status of this cell
+				if(2 === aliveNeighbors || 3 === aliveNeighbors) {
+					nextCells[x][y].isAlive = true;
+				} else {
+					nextCells[x][y].isAlive = false;
+				}
+			});
+		});
+
+		Grid.cells = nextCells;
 	}
 };
 
