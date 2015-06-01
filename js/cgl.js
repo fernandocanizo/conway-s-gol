@@ -3,7 +3,7 @@
 
 "use strict";
 
-const CELL_SIZE = 20;
+const CELL_SIZE = 50;
 
 // don't need to draw points on this app, so let's do a pure hash
 var Point = Object.create(null, {
