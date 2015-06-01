@@ -235,5 +235,9 @@ var ctx = document.getElementById('canvas').getContext('2d');
 ctx.canvas.width  = window.innerWidth - (window.innerWidth % CELL_SIZE);
 ctx.canvas.height = window.innerHeight - (window.innerHeight % CELL_SIZE);
 
-var grid = Object.create(Grid);
-grid.draw(ctx);
+Grid.draw(ctx);
+
+var interval = setInterval(function () {
+	Grid.getNextGeneration();
+	Grid.draw(ctx);
+}, 1000);
